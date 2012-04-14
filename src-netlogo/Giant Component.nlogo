@@ -1,9 +1,9 @@
 ;; This example shows the use of graphstream extension.
 ;; This is a modified example from the model library.
-;; The only modifications are the commands starting by 'graphstream:'
+;; The only modifications are the commands starting by 'gs:'
 
 ;; Load the graphstream extension
-extensions [graphstream]
+extensions [gs]
 
 turtles-own
 [
@@ -25,17 +25,17 @@ globals
 to setup
   ;; Clear the graphstream graph
   ;; This will remove all nodes and edges
-  graphstream:clear
+  gs:clear
   
   ;; A sender is an object that sends graph events over the network
   ;; We can create several senders with different names if we want
   
   ;; Remove the sender if it was already created
-  graphstream:remove-sender "my sender"
+  gs:remove-sender "my sender"
   ;; Create a new sender called 'my sender' sending graph events
   ;; to the host 'localhost' on port 2012
   ;; There must be a receiver on the other side
-  graphstream:add-sender "my sender" "localhost" 2012
+  gs:add-sender "my sender" "localhost" 2012
   
   ca
   set-default-shape turtles "circle"
@@ -52,8 +52,8 @@ to make-turtles
   crt num-nodes [
     ;; When creating a turtle, ask it to register in the graph.
     ;; This command will generate and send a node creation event
-    ;; Turtles should call the 'graphstream:remove' before dying 
-    graphstream:add
+    ;; Turtles should call the 'gs:remove' before they die 
+    gs:add
   ]
   layout-circle turtles max-pxcor - 1
 end
@@ -149,8 +149,8 @@ to add-edge
     [ create-link-with node2 [
         ;; When creating a link, ask it to register in the graph
         ;; This command will generate and send edge creation event
-        ;; Links should call the 'graphstream:remove' command before dying
-        graphstream:add
+        ;; Links should call the 'gs:remove' command before they die
+        gs:add
     ]]
   ]
 end

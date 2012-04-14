@@ -32,7 +32,7 @@ public class AddSender extends DefaultCommand {
 		try {
 			id = args[0].getString();
 			host = args[1].getString();
-			port = (int)args[2].getDoubleValue();
+			port = args[2].getIntValue();
 		} catch (LogoException e) {
 			throw new ExtensionException(e.getMessage());
 		}
@@ -46,6 +46,6 @@ public class AddSender extends DefaultCommand {
 			throw new ExtensionException(e.getMessage());			
 		}
 		sender.setPacker(new Base64Packer());
-		GSExtension.addSender(id, sender);
+		GSManager.addSender(id, sender);
 	}
 }

@@ -17,6 +17,6 @@ public class Clear extends DefaultCommand {
 	@Override
 	public void perform(Argument[] args, Context context)
 			throws ExtensionException, LogoException {
-		GSExtension.clear();
+		GSManager.clear();
 	}
 }

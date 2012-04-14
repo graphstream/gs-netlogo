@@ -30,7 +30,7 @@ public class RemoveSender extends DefaultCommand {
 		} catch (LogoException e) {
 			throw new ExtensionException(e.getMessage());
 		}
-		NetStreamSender sender = GSExtension.removeSender(id);
+		NetStreamSender sender = GSManager.removeSender(id);
 		if (sender != null) {
 			try {
 				sender.close();

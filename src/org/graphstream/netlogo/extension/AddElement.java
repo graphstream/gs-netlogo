@@ -20,10 +20,10 @@ public class AddElement extends DefaultCommand {
 			throws ExtensionException, LogoException {
 		Agent agent = context.getAgent();
 		if (agent instanceof Turtle)
-			GSExtension.addNode(agent.id() + "");
+			GSManager.addNode(agent.id() + "");
 		else if (agent instanceof Link) {
 			Link link = (Link)agent;
-			GSExtension.addEdge(link.end1().id() + "", link.end2().id() + "", link.isDirectedLink());
+			GSManager.addEdge(link.end1().id() + "", link.end2().id() + "", link.isDirectedLink());
 		}
 	}
 }

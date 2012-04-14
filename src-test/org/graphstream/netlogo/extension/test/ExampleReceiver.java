@@ -22,5 +22,4 @@ public class ExampleReceiver {
 			Thread.sleep(100);
 		}
 	}
-
 }

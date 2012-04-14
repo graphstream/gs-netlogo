@@ -20,10 +20,10 @@ public class RemoveElement extends DefaultCommand {
 			throws ExtensionException, LogoException {
 		Agent agent = context.getAgent();
 		if (agent instanceof Turtle)
-			GSExtension.removeNode(agent.id() + "");
+			GSManager.removeNode(agent.id() + "");
 		else if (agent instanceof Link) {
 			Link link = (Link)agent;
-			GSExtension.removeEdge(link.end1().id() + "_" + link.end2().id());
+			GSManager.removeEdge(link.end1().id() + "_" + link.end2().id());
 		}
 	}
 }
