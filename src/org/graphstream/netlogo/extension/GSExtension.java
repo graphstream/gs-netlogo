@@ -1,4 +1,4 @@
-package org.graphstream.netlogo;
+package org.graphstream.netlogo.extension;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,6 +44,18 @@ public class GSExtension extends DefaultClassManager {
 	public static void clear() {
 		for (Map.Entry<String, NetStreamSender> entry : senders.entrySet())
 			entry.getValue().graphCleared(entry.getKey(), timeId);
+		timeId++;
+	}
+	
+	public static void removeNode(String id) {
+		for (Map.Entry<String, NetStreamSender> entry : senders.entrySet())
+			entry.getValue().nodeRemoved(entry.getKey(), timeId, id);
+		timeId++;
+	}
+	
+	public static void removeEdge(String id) {
+		for (Map.Entry<String, NetStreamSender> entry : senders.entrySet())
+			entry.getValue().edgeRemoved(entry.getKey(), timeId, id);
 		timeId++;		
 	}
 }

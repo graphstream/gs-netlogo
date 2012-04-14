@@ -1,4 +1,4 @@
-package org.graphstream.netlogo;
+package org.graphstream.netlogo.extension;
 import java.io.IOException;
 import java.net.UnknownHostException;
 

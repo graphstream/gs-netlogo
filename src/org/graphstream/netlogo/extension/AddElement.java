@@ -1,4 +1,4 @@
-package org.graphstream.netlogo;
+package org.graphstream.netlogo.extension;
 import org.nlogo.api.Agent;
 import org.nlogo.api.Argument;
 import org.nlogo.api.Context;
