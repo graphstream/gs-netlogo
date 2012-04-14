@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Extension-Name: graphstream
+Class-Manager: GSExtension
+NetLogo-Extension-API-Version: 4.1
