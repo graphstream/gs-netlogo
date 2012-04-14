@@ -9,7 +9,9 @@ graph view of a NetLogo simulation. The nodes of this graph correspond to the
 turtles and its edges are the links between them.
 
 .. _NetLogo: http://ccl.northwestern.edu/netlogo/index.shtml
+
 .. _GraphStream http://graphstream-project.org/
+
 .. _NetStream https://github.com/graphstream/gs-netstream
 
 Check the `user guide`_ for a description of this extension.
