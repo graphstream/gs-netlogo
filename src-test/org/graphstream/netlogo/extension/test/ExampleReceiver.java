@@ -12,6 +12,7 @@ import org.graphstream.stream.thread.ThreadProxyPipe;
 public class ExampleReceiver {
 	public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
 		Graph g = new SingleGraph("graph");
+		g.setStrict(false);
 		g.display();
 		NetStreamReceiver receiver = new NetStreamReceiver(2012);
 		ThreadProxyPipe pipe = receiver.getDefaultStream();
