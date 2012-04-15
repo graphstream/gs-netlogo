@@ -1,3 +1,4 @@
+;; load the gs extension
 extensions [gs]
 
 globals [
@@ -32,7 +33,7 @@ turtles-own [
 to setup
   ca
   
-  ;; gs
+  ;; init the sender
   gs:clear
   gs:remove-sender "my sender"
   gs:add-sender "my sender" "localhost" 2012
@@ -60,7 +61,7 @@ end
 
 to setup-people
   crt initial-people
-    [ ;; gs
+    [ ;; register people as nodes
       gs:add
       
       setxy random-xcor random-ycor
@@ -89,14 +90,14 @@ end
 to assign-color  ;; turtle procedure
   ifelse not infected?
     [ set color green 
-      ;; gs
+      ;; tell the receiver that I am healthy
       gs:add-attribute "ui.class" "healthy"]
     [ ifelse known?
       [ set color red 
-        ;; gs
+        ;; tell the receiver that I am infected
         gs:add-attribute "ui.class" "infected"]
       [ set color blue 
-        ;; gs
+        ;; tell the receiver that I am infected but don't know it
         gs:add-attribute "ui.class" "unknown"] ]
 end
 
@@ -199,7 +200,7 @@ to couple  ;; turtle procedure -- righties only!
         move-to patch-here ;; partner moves to center of patch
         set pcolor gray - 3
         ask (patch-at -1 0) [ set pcolor gray - 3 ] 
-        ;; gs
+        ;; create a link with the partner and register it
         create-link-with partner [
           gs:add
           set hidden? true
@@ -220,10 +221,13 @@ to uncouple  ;; turtle procedure
           ask (patch-at -1 0) [ set pcolor black ]
           ask partner [ set partner nobody ]
           ask partner [ set coupled? false ]
-          ;; gs
+          ;; remove the link with the partner
           ask link-with partner [
-            ;; comment the following line if you want to keep the edgeafter the break up
-            gs:remove
+            ;; uncomment the following command if you want to remove the edge after the break up
+            ;; if you leave it commented, make sure to turn off the strict checking on the
+            ;; receiver side, because two people may couple more than once
+            ;; rec
+            ;; gs:remove
             die
           ]
           set partner nobody ] ]

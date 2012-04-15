@@ -3,7 +3,6 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 
 import org.graphstream.stream.netstream.NetStreamSender;
-import org.graphstream.stream.netstream.packing.Base64Packer;
 import org.nlogo.api.Argument;
 import org.nlogo.api.Context;
 import org.nlogo.api.DefaultCommand;
@@ -45,7 +44,7 @@ public class AddSender extends DefaultCommand {
 		} catch (IOException e) {
 			throw new ExtensionException(e.getMessage());			
 		}
-		sender.setPacker(new Base64Packer());
+//		sender.setPacker(new Base64Packer());
 		GSManager.addSender(id, sender);
 	}
 }
