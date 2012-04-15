@@ -10,7 +10,7 @@ public class Clear extends DefaultCommand {
 	
 
 	@Override
-	public strictfp String getAgentClassString() {
+	public String getAgentClassString() {
 		return "O";
 	}
 

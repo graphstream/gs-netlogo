@@ -225,8 +225,7 @@ to uncouple  ;; turtle procedure
           ask link-with partner [
             ;; uncomment the following command if you want to remove the edge after the break up
             ;; if you leave it commented, make sure to turn off the strict checking on the
-            ;; receiver side, because two people may couple more than once
-            ;; rec
+            ;; receiver side, because two persons may couple more than once
             ;; gs:remove
             die
           ]

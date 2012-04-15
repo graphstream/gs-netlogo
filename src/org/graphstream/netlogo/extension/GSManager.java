@@ -1,4 +1,6 @@
 package org.graphstream.netlogo.extension;
+import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,12 +29,29 @@ public class GSManager extends DefaultClassManager {
 		manager.addPrimitive("step", new Step());		
 	}
 	
-	public static void addSender(String id, NetStreamSender sender) {
+	public static void addSender(String id, String host, int port) throws ExtensionException {
+		NetStreamSender sender = senders.get(id);
+		if (sender != null)
+			throw new ExtensionException("Sender named " + id + " already exists. Remove it first.");
+		try {
+			sender = new NetStreamSender(host, port);
+		} catch (UnknownHostException e) {
+			throw new ExtensionException(e.getMessage());
+		} catch (IOException e) {
+			throw new ExtensionException(e.getMessage());
+		}
 		senders.put(id, sender);
 	}
 	
-	public static NetStreamSender removeSender(String id) {
-		return senders.remove(id);
+	public static void removeSender(String id) throws ExtensionException {
+		NetStreamSender sender = senders.remove(id);
+		if (sender == null)
+			return;
+		try {
+			sender.close();
+		} catch (IOException e) {
+			throw new ExtensionException(e.getMessage());
+		}
 	}
 	
 	public static void addNode(String nodeId) {

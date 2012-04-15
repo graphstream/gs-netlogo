@@ -1,8 +1,4 @@
 package org.graphstream.netlogo.extension;
-import java.io.IOException;
-import java.net.UnknownHostException;
-
-import org.graphstream.stream.netstream.NetStreamSender;
 import org.nlogo.api.Argument;
 import org.nlogo.api.Context;
 import org.nlogo.api.DefaultCommand;
@@ -35,16 +31,6 @@ public class AddSender extends DefaultCommand {
 		} catch (LogoException e) {
 			throw new ExtensionException(e.getMessage());
 		}
-		
-		NetStreamSender sender = null;
-		try {
-			sender = new NetStreamSender(host, port);
-		} catch (UnknownHostException e) {
-			throw new ExtensionException(e.getMessage());
-		} catch (IOException e) {
-			throw new ExtensionException(e.getMessage());			
-		}
-//		sender.setPacker(new Base64Packer());
-		GSManager.addSender(id, sender);
+		GSManager.addSender(id, host, port);		
 	}
 }

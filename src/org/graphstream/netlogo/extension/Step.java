@@ -10,12 +10,12 @@ import org.nlogo.api.Syntax;
 public class Step extends DefaultCommand {
 
 	@Override
-	public strictfp String getAgentClassString() {
+	public String getAgentClassString() {
 		return "O";
 	}
 
 	@Override
-	public strictfp Syntax getSyntax() {
+	public Syntax getSyntax() {
 		return Syntax.commandSyntax(new int[]{Syntax.TYPE_NUMBER});
 	}
 
@@ -30,5 +30,4 @@ public class Step extends DefaultCommand {
 		}
 		GSManager.stepBegins(step);
 	}
-
 }

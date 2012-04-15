@@ -1,7 +1,4 @@
 package org.graphstream.netlogo.extension;
-import java.io.IOException;
-
-import org.graphstream.stream.netstream.NetStreamSender;
 import org.nlogo.api.Argument;
 import org.nlogo.api.Context;
 import org.nlogo.api.DefaultCommand;
@@ -30,13 +27,6 @@ public class RemoveSender extends DefaultCommand {
 		} catch (LogoException e) {
 			throw new ExtensionException(e.getMessage());
 		}
-		NetStreamSender sender = GSManager.removeSender(id);
-		if (sender != null) {
-			try {
-				sender.close();
-			} catch (IOException e) {
-				throw new ExtensionException(e.getMessage());
-			}
-		}
+		GSManager.removeSender(id);
 	}
 }

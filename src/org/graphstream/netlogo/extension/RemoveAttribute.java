@@ -14,12 +14,12 @@ import org.nlogo.api.Turtle;
 public class RemoveAttribute extends DefaultCommand {
 
 	@Override
-	public strictfp String getAgentClassString() {
+	public String getAgentClassString() {
 		return "OTL";
 	}
 
 	@Override
-	public strictfp Syntax getSyntax() {
+	public Syntax getSyntax() {
 		return Syntax.commandSyntax(new int[]{Syntax.TYPE_STRING});
 	}
 

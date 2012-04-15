@@ -15,12 +15,12 @@ import org.nlogo.api.Turtle;
 public class AddAttribute extends DefaultCommand {
 
 	@Override
-	public strictfp String getAgentClassString() {
+	public String getAgentClassString() {
 		return "OTL";
 	}
 
 	@Override
-	public strictfp Syntax getSyntax() {
+	public Syntax getSyntax() {
 		return Syntax.commandSyntax(new int[]{Syntax.TYPE_STRING, 
 				Syntax.TYPE_NUMBER | Syntax.TYPE_BOOLEAN | Syntax.TYPE_STRING | Syntax.TYPE_LIST});
 	}
