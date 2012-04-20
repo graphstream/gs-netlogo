@@ -1,16 +1,21 @@
-package org.graphstream.netlogo.extension;
+package org.graphstream.netlogo.extension.sender;
 
+import org.graphstream.netlogo.extension.GSManager;
+import org.nlogo.api.Agent;
 import org.nlogo.api.Argument;
 import org.nlogo.api.Context;
 import org.nlogo.api.DefaultCommand;
 import org.nlogo.api.ExtensionException;
+import org.nlogo.api.Link;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
+import org.nlogo.api.Turtle;
 
-public class RemoveSender extends DefaultCommand {
+public class SendAdd extends DefaultCommand {
+
 	@Override
 	public String getAgentClassString() {
-		return "O";
+		return "TL";
 	}
 
 	@Override
@@ -23,7 +28,17 @@ public class RemoveSender extends DefaultCommand {
 			throws ExtensionException, LogoException {
 		try {
 			String senderId = args[0].getString();
-			GSManager.removeSender(senderId);
+			GSSender sender = GSManager.getSender(senderId);
+			if (sender == null)
+				return;
+			Agent agent = context.getAgent();
+			if (agent instanceof Turtle)
+				sender.sendNodeAdded(agent.id());
+			else if (agent instanceof Link) {
+				Link link = (Link) agent;
+				sender.sendEdgeAdded(link.end1().id(), link.end2().id(),
+						link.isDirectedLink());
+			}
 		} catch (LogoException e) {
 			throw new ExtensionException(e.getMessage());
 		}

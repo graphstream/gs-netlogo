@@ -1,5 +1,6 @@
-package org.graphstream.netlogo.extension;
+package org.graphstream.netlogo.extension.sender;
 
+import org.graphstream.netlogo.extension.GSManager;
 import org.nlogo.api.Argument;
 import org.nlogo.api.Context;
 import org.nlogo.api.DefaultCommand;
@@ -7,7 +8,7 @@ import org.nlogo.api.ExtensionException;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 
-public class Step extends DefaultCommand {
+public class SendStep extends DefaultCommand {
 
 	@Override
 	public String getAgentClassString() {
@@ -16,18 +17,23 @@ public class Step extends DefaultCommand {
 
 	@Override
 	public Syntax getSyntax() {
-		return Syntax.commandSyntax(new int[]{Syntax.TYPE_NUMBER});
+		return Syntax.commandSyntax(new int[] { Syntax.TYPE_STRING,
+				Syntax.TYPE_NUMBER });
 	}
 
 	@Override
 	public void perform(Argument[] args, Context context)
 			throws ExtensionException, LogoException {
-		double step;
 		try {
-			step = args[0].getDoubleValue();
+			String senderId = args[0].getString();
+			GSSender sender = GSManager.getSender(senderId);
+			if (sender == null)
+				return;
+			double step = args[1].getDoubleValue();
+			sender.sendStepBegins(step);
 		} catch (LogoException e) {
 			throw new ExtensionException(e.getMessage());
 		}
-		GSManager.stepBegins(step);
 	}
+
 }
