@@ -31,7 +31,7 @@ to setup
   gs:add-sender "my sender" "localhost" 2012
   ;; This command sends 'graph cleared' event.
   ;; This will remove all nodes, edges and attributes
-  gs:send-clear "my sender"
+  gs:clear "my sender"
 
   ca  
   set-default-shape turtles "circle"
@@ -48,7 +48,7 @@ to make-turtles
   crt num-nodes [
     ;; When creating a turtle, ask it to register in the graph.
     ;; This command sends 'add node' event
-    gs:send-add "my sender"
+    gs:add "my sender"
   ]
   layout-circle turtles max-pxcor - 1
 end
@@ -144,7 +144,7 @@ to add-edge
     [ create-link-with node2 [
         ;; When creating a link, ask it to register in the graph
         ;; This command sends 'add edge' event
-        gs:send-add "my sender"
+        gs:add "my sender"
     ]]
   ]
 end

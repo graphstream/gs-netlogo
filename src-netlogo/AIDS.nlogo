@@ -1,4 +1,3 @@
-;; load the gs extension
 extensions [gs]
 
 globals [
@@ -31,14 +30,12 @@ turtles-own [
 ;;;
 
 to setup
+  gs:add-sender "couple graph" "localhost" 3001
+  gs:send-clear "couple graph"
+  gs:send-add-attribute "couple graph" "ui.stylesheet"
+    "node.negative {fill-color: green;} node.unknown {fill-color: blue;} node.positive {fill-color: red;}"
+  
   ca
-  
-  ;; init the sender
-  gs:clear
-  gs:remove-sender "my sender"
-  gs:add-sender "my sender" "localhost" 2012
-  gs:add-attribute "ui.stylesheet" "node.healthy {fill-color: green;} node.unknown {fill-color: blue;} node.infected {fill-color: red;}"
-  
   setup-globals
   setup-people
   setup-plot
@@ -61,10 +58,7 @@ end
 
 to setup-people
   crt initial-people
-    [ ;; register people as nodes
-      gs:add
-      
-      setxy random-xcor random-ycor
+    [ setxy random-xcor random-ycor
       set known? false
       set coupled? false
       set partner nobody
@@ -89,16 +83,10 @@ end
 
 to assign-color  ;; turtle procedure
   ifelse not infected?
-    [ set color green 
-      ;; tell the receiver that I am healthy
-      gs:add-attribute "ui.class" "healthy"]
+    [ set color green ]
     [ ifelse known?
-      [ set color red 
-        ;; tell the receiver that I am infected
-        gs:add-attribute "ui.class" "infected"]
-      [ set color blue 
-        ;; tell the receiver that I am infected but don't know it
-        gs:add-attribute "ui.class" "unknown"] ]
+      [ set color red ]
+      [ set color blue ] ]
 end
 
 ;; The following four procedures assign core turtle variables.  They use
@@ -199,12 +187,7 @@ to couple  ;; turtle procedure -- righties only!
         move-to patch-here ;; move to center of patch
         move-to patch-here ;; partner moves to center of patch
         set pcolor gray - 3
-        ask (patch-at -1 0) [ set pcolor gray - 3 ] 
-        ;; create a link with the partner and register it
-        create-link-with partner [
-          gs:add
-          set hidden? true
-        ] ] ]
+        ask (patch-at -1 0) [ set pcolor gray - 3 ] ] ]
 end
 
 ;; If two peoples are together for longer than either person's commitment variable
@@ -221,14 +204,6 @@ to uncouple  ;; turtle procedure
           ask (patch-at -1 0) [ set pcolor black ]
           ask partner [ set partner nobody ]
           ask partner [ set coupled? false ]
-          ;; remove the link with the partner
-          ask link-with partner [
-            ;; uncomment the following command if you want to remove the edge after the break up
-            ;; if you leave it commented, make sure to turn off the strict checking on the
-            ;; receiver side, because two persons may couple more than once
-            ;; gs:remove
-            die
-          ]
           set partner nobody ] ]
 end
 

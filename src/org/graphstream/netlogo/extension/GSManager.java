@@ -5,12 +5,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.graphstream.netlogo.extension.sender.GSSender;
-import org.graphstream.netlogo.extension.sender.SendAdd;
-import org.graphstream.netlogo.extension.sender.SendAddAttribute;
-import org.graphstream.netlogo.extension.sender.SendClear;
-import org.graphstream.netlogo.extension.sender.SendRemove;
-import org.graphstream.netlogo.extension.sender.SendRemoveAttribute;
-import org.graphstream.netlogo.extension.sender.SendStep;
+import org.graphstream.netlogo.extension.sender.Add;
+import org.graphstream.netlogo.extension.sender.AddAttribute;
+import org.graphstream.netlogo.extension.sender.Clear;
+import org.graphstream.netlogo.extension.sender.Remove;
+import org.graphstream.netlogo.extension.sender.RemoveAttribute;
+import org.graphstream.netlogo.extension.sender.Step;
 import org.graphstream.stream.sync.SinkTime;
 import org.graphstream.stream.sync.SourceTime;
 import org.nlogo.api.DefaultClassManager;
@@ -38,14 +38,14 @@ public class GSManager extends DefaultClassManager {
 		manager.addPrimitive("add-sender", new AddSender());
 		manager.addPrimitive("remove-sender", new RemoveSender());
 
-		manager.addPrimitive("send-add", new SendAdd());
-		manager.addPrimitive("send-remove", new SendRemove());
+		manager.addPrimitive("add", new Add());
+		manager.addPrimitive("remove", new Remove());
 
-		manager.addPrimitive("send-add-attribute", new SendAddAttribute());
-		manager.addPrimitive("send-remove-attribute", new SendRemoveAttribute());
+		manager.addPrimitive("add-attribute", new AddAttribute());
+		manager.addPrimitive("remove-attribute", new RemoveAttribute());
 
-		manager.addPrimitive("send-clear", new SendClear());
-		manager.addPrimitive("send-step", new SendStep());
+		manager.addPrimitive("clear", new Clear());
+		manager.addPrimitive("step", new Step());
 	}
 
 	public static GSSender getSender(String senderId) {
