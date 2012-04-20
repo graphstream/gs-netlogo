@@ -1,5 +1,5 @@
 ;; This example shows the use of graphstream extension.
-;; This is a modified example from the model library.
+;; This is a modified model from the model library.
 ;; The only modifications are the commands starting by 'gs:'
 
 ;; Load the graphstream extension
@@ -23,21 +23,17 @@ globals
 ;;;;;;;;;;;;;;;;;;;;;;;;
 
 to setup
-  ;; Clear the graphstream graph
-  ;; This will remove all nodes and edges
-  gs:clear
-  
-  ;; A sender is an object that sends graph events over the network
-  ;; We can create several senders with different names if we want
-  
-  ;; Remove the sender if it was already created
-  gs:remove-sender "my sender"
-  ;; Create a new sender called 'my sender' sending graph events
-  ;; to the host 'localhost' on port 2012
-  ;; There must be a receiver on the other side
+  ;; When this procedure is called for the first time, it creates a sender 
+  ;; with id "my sender" connected to localhost on port 2012.
+  ;; Note that if there is no receiver on the other side, an error occurs.
+  ;; Consecutive calls do nothing, so it is safe to execute the setup procedure
+  ;; as many times as you want.
   gs:add-sender "my sender" "localhost" 2012
-  
-  ca
+  ;; This command sends 'graph cleared' event.
+  ;; This will remove all nodes, edges and attributes
+  gs:send-clear "my sender"
+
+  ca  
   set-default-shape turtles "circle"
   make-turtles
   ;; at this stage, all the components will be of size 1,
@@ -51,9 +47,8 @@ end
 to make-turtles
   crt num-nodes [
     ;; When creating a turtle, ask it to register in the graph.
-    ;; This command will generate and send a node creation event
-    ;; Turtles should call the 'gs:remove' before they die 
-    gs:add
+    ;; This command sends 'add node' event
+    gs:send-add "my sender"
   ]
   layout-circle turtles max-pxcor - 1
 end
@@ -148,9 +143,8 @@ to add-edge
     ;; else, go ahead and make it
     [ create-link-with node2 [
         ;; When creating a link, ask it to register in the graph
-        ;; This command will generate and send edge creation event
-        ;; Links should call the 'gs:remove' command before they die
-        gs:add
+        ;; This command sends 'add edge' event
+        gs:send-add "my sender"
     ]]
   ]
 end
