@@ -31,9 +31,10 @@ turtles-own [
 
 to setup
   gs:add-sender "couple graph" "localhost" 3001
-  gs:send-clear "couple graph"
-  gs:send-add-attribute "couple graph" "ui.stylesheet"
-    "node.negative {fill-color: green;} node.unknown {fill-color: blue;} node.positive {fill-color: red;}"
+  gs:clear "couple graph"
+  gs:add-attribute "couple graph" "ui.stylesheet"
+    "node.healthy {fill-color: green;} node.unknown {fill-color: blue;} node.infected {fill-color: red;}"
+  
   
   ca
   setup-globals
@@ -58,7 +59,9 @@ end
 
 to setup-people
   crt initial-people
-    [ setxy random-xcor random-ycor
+    [ gs:add "couple graph"
+      setxy random-xcor random-ycor
+      gs:add-attribute "couple graph" "xy" list xcor ycor
       set known? false
       set coupled? false
       set partner nobody
@@ -83,10 +86,13 @@ end
 
 to assign-color  ;; turtle procedure
   ifelse not infected?
-    [ set color green ]
+    [ set color green 
+      gs:add-attribute "couple graph" "ui.class" "healthy" ]
     [ ifelse known?
-      [ set color red ]
-      [ set color blue ] ]
+      [ set color red 
+        gs:add-attribute "couple graph" "ui.class" "infected" ]
+      [ set color blue 
+        gs:add-attribute "couple graph" "ui.class" "unknown" ] ]
 end
 
 ;; The following four procedures assign core turtle variables.  They use
@@ -169,6 +175,7 @@ end
 to move  ;; turtle procedure
   rt random-float 360
   fd 1
+  gs:add-attribute "couple graph" "xy" list xcor ycor
 end
 
 ;; People have a chance to couple depending on their tendency to have sex and
@@ -184,8 +191,18 @@ to couple  ;; turtle procedure -- righties only!
         set coupled? true
         ask partner [ set coupled? true ]
         ask partner [ set partner myself ]
+        
+        create-link-with partner [
+          gs:add "couple graph"
+          die
+        ]
+        
         move-to patch-here ;; move to center of patch
-        move-to patch-here ;; partner moves to center of patch
+        gs:add-attribute "couple graph" "xy" list xcor ycor
+        ask partner [
+          move-to patch-here ;; partner moves to center of patch
+          gs:add-attribute "couple graph" "xy" list xcor ycor 
+        ]
         set pcolor gray - 3
         ask (patch-at -1 0) [ set pcolor gray - 3 ] ] ]
 end
@@ -204,6 +221,12 @@ to uncouple  ;; turtle procedure
           ask (patch-at -1 0) [ set pcolor black ]
           ask partner [ set partner nobody ]
           ask partner [ set coupled? false ]
+          
+          create-link-with partner [
+            gs:remove "couple graph"
+            die
+          ]
+          
           set partner nobody ] ]
 end
 
@@ -285,8 +308,8 @@ GRAPHICS-WINDOW
 1
 1
 0
-1
-1
+0
+0
 1
 -12
 12
