@@ -34,8 +34,6 @@ public class AddAttribute extends DefaultCommand {
 		try {
 			String senderId = args[0].getString();
 			GSSender sender = GSManager.getSender(senderId);
-			if (sender == null)
-				return;
 			String attribute = args[1].getString();
 			Object value = argToNetStream(args[2]);
 			Agent agent = context.getAgent();

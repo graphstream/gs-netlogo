@@ -31,8 +31,6 @@ public class RemoveAttribute extends DefaultCommand {
 		try {
 			String senderId = args[0].getString();
 			GSSender sender = GSManager.getSender(senderId);
-			if (sender == null)
-				return;
 			String attribute = args[1].getString();
 			Agent agent = context.getAgent();
 			if (agent instanceof Observer)

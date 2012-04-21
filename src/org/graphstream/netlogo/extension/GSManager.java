@@ -36,7 +36,7 @@ public class GSManager extends DefaultClassManager {
 	@Override
 	public void load(PrimitiveManager manager) throws ExtensionException {
 		manager.addPrimitive("add-sender", new AddSender());
-		manager.addPrimitive("remove-sender", new RemoveSender());
+		manager.addPrimitive("clear-senders", new ClearSenders());
 
 		manager.addPrimitive("add", new Add());
 		manager.addPrimitive("remove", new Remove());
@@ -48,23 +48,28 @@ public class GSManager extends DefaultClassManager {
 		manager.addPrimitive("step", new Step());
 	}
 
-	public static GSSender getSender(String senderId) {
-		return senders.get(senderId);
+	public static GSSender getSender(String senderId) throws ExtensionException {
+		GSSender sender = senders.get(senderId);
+		if (sender == null)
+			throw new ExtensionException("Sender \"" + senderId
+					+ "\" does not exist");
+		return sender;
 	}
 
-	public static void addSender(String senderId, String host, int port) throws ExtensionException {
+	public static void addSender(String senderId, String host, int port)
+			throws ExtensionException {
 		GSSender sender = senders.get(senderId);
-		if (sender == null) {
-			sender = new GSSender(sourceId, sourceTime, host, port);
-			senders.put(senderId, sender);
-		}
+		if (sender != null)
+			throw new ExtensionException("Sender \"" + senderId
+					+ "\" already exists");
+		sender = new GSSender(sourceId, sourceTime, host, port);
+		senders.put(senderId, sender);
 	}
 
-	public static void removeSender(String senderId) throws ExtensionException {
-		GSSender sender = senders.get(senderId);
-		if (sender != null) {
+	public static void clearSenders() throws ExtensionException {
+		for (GSSender sender : senders.values()) {
 			sender.close();
-			senders.remove(senderId);
 		}
+		senders.clear();
 	}
 }

@@ -27,8 +27,6 @@ public class Step extends DefaultCommand {
 		try {
 			String senderId = args[0].getString();
 			GSSender sender = GSManager.getSender(senderId);
-			if (sender == null)
-				return;
 			double step = args[1].getDoubleValue();
 			sender.sendStepBegins(step);
 		} catch (LogoException e) {

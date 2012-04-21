@@ -26,8 +26,6 @@ public class Clear extends DefaultCommand {
 		try {
 			String senderId = args[0].getString();
 			GSSender sender = GSManager.getSender(senderId);
-			if (sender == null)
-				return;
 			sender.sendGraphCleared();
 		} catch (LogoException e) {
 			throw new ExtensionException(e.getMessage());
