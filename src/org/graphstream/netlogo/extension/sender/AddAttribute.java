@@ -54,7 +54,8 @@ public class AddAttribute extends DefaultCommand {
 	protected static Object argToNetStream(Argument arg)
 			throws ExtensionException, LogoException {
 		Object value = arg.get();
-		if (isOfSimpleType(value))
+		if (value instanceof Boolean || value instanceof Double
+				|| value instanceof String)
 			return value;
 
 		LogoList list = arg.getList();
@@ -62,18 +63,13 @@ public class AddAttribute extends DefaultCommand {
 			throw new ExtensionException("The list must not be empty");
 		Class<?> elementClass = list.get(0).getClass();
 		for (Object o : list) {
-			if (!isOfSimpleType(o))
+			if (!(value instanceof Boolean) && !(value instanceof Double))
 				throw new ExtensionException(
-						"The list elements must be of type boolean, number or string");
+						"The list elements must be of type boolean or number");
 			if (!o.getClass().equals(elementClass))
 				throw new ExtensionException(
-						"The list elements must be all of same type");
+						"The list elements must be all of the same type");
 		}
 		return list.toArray();
-	}
-
-	protected static boolean isOfSimpleType(Object o) {
-		return o != null
-				&& (o instanceof Boolean || o instanceof Double || o instanceof String);
 	}
 }

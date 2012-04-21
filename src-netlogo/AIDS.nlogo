@@ -30,9 +30,22 @@ turtles-own [
 ;;;
 
 to setup
+  gs:remove-sender "couple graph"
   gs:add-sender "couple graph" "localhost" 3001
   gs:clear "couple graph"
   gs:add-attribute "couple graph" "ui.stylesheet"
+    "node.healthy {fill-color: green;} node.unknown {fill-color: blue;} node.infected {fill-color: red;}"
+  
+  gs:remove-sender "infection graph"
+  gs:add-sender "infection graph" "localhost" 3002
+  gs:clear "infection graph"
+  gs:add-attribute "infection graph" "ui.stylesheet"
+    "node {fill-color: red;} edge {fill-color:grey;}"
+    
+  gs:remove-sender "cumulative graph"
+  gs:add-sender "cumulative graph" "localhost" 3003
+  gs:clear "cumulative graph"
+  gs:add-attribute "cumulative graph" "ui.stylesheet"
     "node.healthy {fill-color: green;} node.unknown {fill-color: blue;} node.infected {fill-color: red;}"
   
   
@@ -60,6 +73,7 @@ end
 to setup-people
   crt initial-people
     [ gs:add "couple graph"
+      gs:add "cumulative graph"
       setxy random-xcor random-ycor
       gs:add-attribute "couple graph" "xy" list xcor ycor
       set known? false
@@ -71,7 +85,9 @@ to setup-people
       ;; 2.5% of the people start out infected, but they don't know it
       set infected? (who < initial-people * 0.025)
       if infected?
-        [ set infection-length random-float symptoms-show ]
+        [ set infection-length random-float symptoms-show 
+          gs:add "infection graph"
+        ]
       assign-commitment
       assign-coupling-tendency
       assign-condom-use
@@ -85,14 +101,21 @@ end
 ;; red is infected and knows it
 
 to assign-color  ;; turtle procedure
-  ifelse not infected?
-    [ set color green 
-      gs:add-attribute "couple graph" "ui.class" "healthy" ]
-    [ ifelse known?
-      [ set color red 
-        gs:add-attribute "couple graph" "ui.class" "infected" ]
-      [ set color blue 
-        gs:add-attribute "couple graph" "ui.class" "unknown" ] ]
+  ifelse not infected? [ 
+    set color green 
+    gs:add-attribute "couple graph" "ui.class" "healthy" 
+    gs:add-attribute "cumulative graph" "ui.class" "healthy" 
+  ][ 
+    ifelse known? [
+      set color red 
+      gs:add-attribute "couple graph" "ui.class" "infected"
+      gs:add-attribute "cumulative graph" "ui.class" "infected"
+    ][ 
+      set color blue 
+      gs:add-attribute "couple graph" "ui.class" "unknown"
+      gs:add-attribute "cumulative graph" "ui.class" "unknown"
+    ]
+  ]
 end
 
 ;; The following four procedures assign core turtle variables.  They use
@@ -128,6 +151,7 @@ end
 ;;;
 
 to go
+  gs:step "cumulative graph" ticks
   if all? turtles [known?]
     [ stop ]
   check-sliders
@@ -194,6 +218,7 @@ to couple  ;; turtle procedure -- righties only!
         
         create-link-with partner [
           gs:add "couple graph"
+          gs:add "cumulative graph"
           die
         ]
         
@@ -239,11 +264,20 @@ end
 ;; wants to use a condom, infection will not occur.
 
 to infect  ;; turtle procedure
-  if coupled? and infected? and not known?
-    [ if random-float 11 > condom-use or
-         random-float 11 > ([condom-use] of partner)
-        [ if random-float 100 < infection-chance
-            [ ask partner [ set infected? true ] ] ] ]
+  if coupled? and infected? and not known? [ 
+    if random-float 11 > condom-use or random-float 11 > ([condom-use] of partner) [
+      if random-float 100 < infection-chance and ([not infected?] of partner) [
+        ask partner [
+          set infected? true
+          gs:add "infection graph"
+        ]
+        create-link-to partner [
+          gs:add "infection graph"
+          die
+        ]
+      ]
+    ] 
+  ]
 end
 
 ;; People have a tendency to check out their health status based on a slider value.
