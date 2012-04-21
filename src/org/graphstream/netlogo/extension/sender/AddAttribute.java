@@ -63,7 +63,7 @@ public class AddAttribute extends DefaultCommand {
 			throw new ExtensionException("The list must not be empty");
 		Class<?> elementClass = list.get(0).getClass();
 		for (Object o : list) {
-			if (!(value instanceof Boolean) && !(value instanceof Double))
+			if (!(o instanceof Boolean) && !(o instanceof Double))
 				throw new ExtensionException(
 						"The list elements must be of type boolean or number");
 			if (!o.getClass().equals(elementClass))
