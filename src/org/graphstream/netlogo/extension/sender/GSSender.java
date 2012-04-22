@@ -11,8 +11,9 @@ public class GSSender {
 	protected String sourceId;
 	protected SourceTime sourceTime;
 	protected NetStreamSender nsSender;
-	
-	public GSSender(String sourceId, SourceTime sourceTime, String host, int port) throws ExtensionException {
+
+	public GSSender(String sourceId, SourceTime sourceTime, String host,
+			int port) throws ExtensionException {
 		this.sourceId = sourceId;
 		this.sourceTime = sourceTime;
 		try {
@@ -23,55 +24,63 @@ public class GSSender {
 			throw new ExtensionException(e.getMessage());
 		}
 	}
-	
+
 	public void sendNodeAdded(long nodeId) {
 		nsSender.nodeAdded(sourceId, newEvent(), nodeId + "");
 	}
-	
+
 	public void sendEdgeAdded(long fromId, long toId, boolean directed) {
-		nsSender.edgeAdded(sourceId, newEvent(), fromId + "_" + toId, fromId + "", toId + "", directed);
+		nsSender.edgeAdded(sourceId, newEvent(), fromId + "_" + toId, fromId
+				+ "", toId + "", directed);
 	}
-	
+
 	public void sendNodeRemoved(long nodeId) {
 		nsSender.nodeRemoved(sourceId, newEvent(), nodeId + "");
 	}
-	
+
 	public void sendEdgeRemoved(long fromId, long toId) {
 		nsSender.edgeRemoved(sourceId, newEvent(), fromId + "_" + toId);
 	}
-	
+
 	public void sendGraphAttributeAdded(String attribute, Object value) {
 		nsSender.graphAttributeAdded(sourceId, newEvent(), attribute, value);
 	}
-	
-	public void sendNodeAttributeAdded(long nodeId, String attribute, Object value) {
-		nsSender.nodeAttributeAdded(sourceId, newEvent(), nodeId + "", attribute, value);
+
+	public void sendNodeAttributeAdded(long nodeId, String attribute,
+			Object value) {
+		nsSender.nodeAttributeAdded(sourceId, newEvent(), nodeId + "",
+				attribute, value);
 	}
-	
-	public void sendEdgeAttributeAdded(long fromId, long toId, String attribute, Object value) {
-		nsSender.edgeAttributeAdded(sourceId, newEvent(), fromId + "_" + toId, attribute, value);
+
+	public void sendEdgeAttributeAdded(long fromId, long toId,
+			String attribute, Object value) {
+		nsSender.edgeAttributeAdded(sourceId, newEvent(), fromId + "_" + toId,
+				attribute, value);
 	}
-	
+
 	public void sendGraphAttributeRemoved(String attribute) {
 		nsSender.graphAttributeRemoved(sourceId, newEvent(), attribute);
 	}
-	
+
 	public void sendNodeAttributeRemoved(long nodeId, String attribute) {
-		nsSender.nodeAttributeRemoved(sourceId, newEvent(), nodeId + "", attribute);
+		nsSender.nodeAttributeRemoved(sourceId, newEvent(), nodeId + "",
+				attribute);
 	}
-	
-	public void sendEdgeAttributeRemoved(long fromId, long toId, String attribute) {
-		nsSender.edgeAttributeRemoved(sourceId, newEvent(), fromId + "_" + toId, attribute);
+
+	public void sendEdgeAttributeRemoved(long fromId, long toId,
+			String attribute) {
+		nsSender.edgeAttributeRemoved(sourceId, newEvent(),
+				fromId + "_" + toId, attribute);
 	}
-	
+
 	public void sendGraphCleared() {
 		nsSender.graphCleared(sourceId, newEvent());
 	}
-	
+
 	public void sendStepBegins(double step) {
 		nsSender.stepBegins(sourceId, newEvent(), step);
 	}
-	
+
 	public void close() throws ExtensionException {
 		try {
 			nsSender.close();
@@ -79,9 +88,9 @@ public class GSSender {
 			throw new ExtensionException(e.getMessage());
 		}
 	}
-	
+
 	protected long newEvent() {
 		return sourceTime.newEvent();
 	}
-	
+
 }

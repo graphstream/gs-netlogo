@@ -4,6 +4,9 @@ import java.lang.management.ManagementFactory;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.graphstream.netlogo.extension.receiver.GSReceiver;
+import org.graphstream.netlogo.extension.receiver.GetAttribute;
+import org.graphstream.netlogo.extension.receiver.WaitStep;
 import org.graphstream.netlogo.extension.sender.GSSender;
 import org.graphstream.netlogo.extension.sender.Add;
 import org.graphstream.netlogo.extension.sender.AddAttribute;
@@ -23,6 +26,7 @@ public class GSManager extends DefaultClassManager {
 	private static SinkTime sinkTime;
 
 	private static Map<String, GSSender> senders;
+	private static Map<String, GSReceiver> receivers;
 
 	static {
 		sourceId = "gs-netlogo@"
@@ -31,6 +35,7 @@ public class GSManager extends DefaultClassManager {
 		sinkTime = new SinkTime();
 		sourceTime.setSinkTime(sinkTime);
 		senders = new HashMap<String, GSSender>();
+		receivers = new HashMap<String, GSReceiver>();
 	}
 
 	@Override
@@ -46,6 +51,12 @@ public class GSManager extends DefaultClassManager {
 
 		manager.addPrimitive("clear", new Clear());
 		manager.addPrimitive("step", new Step());
+
+		manager.addPrimitive("add-receiver", new AddReceiver());
+		manager.addPrimitive("clear-receivers", new ClearReceivers());
+
+		manager.addPrimitive("get-attribute", new GetAttribute());
+		manager.addPrimitive("wait-step", new WaitStep());
 	}
 
 	public static GSSender getSender(String senderId) throws ExtensionException {
@@ -67,9 +78,33 @@ public class GSManager extends DefaultClassManager {
 	}
 
 	public static void clearSenders() throws ExtensionException {
-		for (GSSender sender : senders.values()) {
+		for (GSSender sender : senders.values())
 			sender.close();
-		}
 		senders.clear();
+	}
+
+	public static GSReceiver getReceiver(String receiverId)
+			throws ExtensionException {
+		GSReceiver receiver = receivers.get(receiverId);
+		if (receiver == null)
+			throw new ExtensionException("Receiver \"" + receiverId
+					+ "\" does not exist");
+		return receiver;
+	}
+
+	public static void addReceiver(String receiverId, String host, int port)
+			throws ExtensionException {
+		GSReceiver receiver = receivers.get(receiverId);
+		if (receiver != null)
+			throw new ExtensionException("Receiver \"" + receiverId
+					+ "\" already exists");
+		receiver = new GSReceiver(sinkTime, host, port);
+		receivers.put(receiverId, receiver);
+	}
+
+	public static void clearReceivers() {
+		for (GSReceiver receiver : receivers.values())
+			receiver.close();
+		receivers.clear();
 	}
 }
