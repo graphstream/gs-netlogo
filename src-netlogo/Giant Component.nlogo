@@ -1,3 +1,5 @@
+extensions [gs]
+
 turtles-own
 [
   ;; this is used to mark turtles we have already visited
@@ -15,8 +17,15 @@ globals
 ;;; Setup Procedures ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;
 
+to setup-senders
+  gs:clear-senders
+  gs:add-sender "sender" "localhost" 2012
+end
+
 to setup
+  setup-senders
   ca
+  gs:clear "sender"
   set-default-shape turtles "circle"
   make-turtles
   ;; at this stage, all the components will be of size 1,
@@ -28,7 +37,9 @@ to setup
 end
 
 to make-turtles
-  crt num-nodes
+  crt num-nodes [
+    gs:add "sender"
+  ]
   layout-circle turtles max-pxcor - 1
 end
 
@@ -115,14 +126,14 @@ to add-edge
   let node1 one-of turtles
   let node2 one-of turtles
   ask node1 [
-    ifelse link-neighbor? node2 or node1 = node2
-    ;; if there's already an edge there, then go back
-    ;; and pick new turtles
-    [ add-edge ]
-    ;; else, go ahead and make it
-    [ create-link-with node2 ]
+    ifelse link-neighbor? node2 or node1 = node2 [
+      add-edge
+    ][ 
+      create-link-with node2 [
+        gs:add "sender"
+      ]
+    ]
   ]
-
 end
 
 
@@ -685,7 +696,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 4.1pre6
+NetLogo 4.1.3
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
@@ -702,4 +713,6 @@ true
 Line -7500403 true 150 150 90 180
 Line -7500403 true 150 150 210 180
 
+@#$#@#$#@
+0
 @#$#@#$#@
