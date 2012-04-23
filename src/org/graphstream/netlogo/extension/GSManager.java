@@ -3,6 +3,7 @@ package org.graphstream.netlogo.extension;
 import java.lang.management.ManagementFactory;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.graphstream.netlogo.extension.receiver.GSReceiver;
 import org.graphstream.netlogo.extension.receiver.GetAttribute;
@@ -92,13 +93,13 @@ public class GSManager extends DefaultClassManager {
 		return receiver;
 	}
 
-	public static void addReceiver(String receiverId, String host, int port)
+	public static void addReceiver(String receiverId, String host, int port, Set<String> attributeFilter)
 			throws ExtensionException {
 		GSReceiver receiver = receivers.get(receiverId);
 		if (receiver != null)
 			throw new ExtensionException("Receiver \"" + receiverId
 					+ "\" already exists");
-		receiver = new GSReceiver(sinkTime, host, port);
+		receiver = new GSReceiver(sinkTime, host, port, attributeFilter);
 		receivers.put(receiverId, receiver);
 	}
 

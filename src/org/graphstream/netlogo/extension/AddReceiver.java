@@ -1,5 +1,8 @@
 package org.graphstream.netlogo.extension;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.nlogo.api.Argument;
 import org.nlogo.api.Context;
 import org.nlogo.api.DefaultCommand;
@@ -16,7 +19,7 @@ public class AddReceiver extends DefaultCommand {
 	@Override
 	public Syntax getSyntax() {
 		return Syntax.commandSyntax(new int[] { Syntax.TYPE_STRING,
-				Syntax.TYPE_STRING, Syntax.TYPE_NUMBER });
+				Syntax.TYPE_STRING, Syntax.TYPE_NUMBER, Syntax.TYPE_STRING | Syntax.TYPE_REPEATABLE }, 3);
 	}
 
 	@Override
@@ -26,7 +29,13 @@ public class AddReceiver extends DefaultCommand {
 			String receiverId = args[0].getString();
 			String host = args[1].getString();
 			int port = args[2].getIntValue();
-			GSManager.addReceiver(receiverId, host, port);
+			Set<String> attributeFilter = null;
+			if (args.length > 3) {
+				attributeFilter = new HashSet<String>();
+				for (int i = 3; i < args.length; i++)
+					attributeFilter.add(args[i].getString());
+			}
+			GSManager.addReceiver(receiverId, host, port, attributeFilter);
 		} catch (LogoException e) {
 			throw new ExtensionException(e.getMessage());
 		}

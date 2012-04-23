@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 
 import org.graphstream.stream.SinkAdapter;
 import org.graphstream.stream.netstream.NetStreamReceiver;
@@ -22,10 +23,12 @@ public class GSReceiver extends SinkAdapter {
 	protected Map<String, Attributes> nodeAttributes;
 	protected Map<String, Attributes> edgeAttributes;
 	protected Queue<Double> steps;
+	protected Set<String> attributeFilter;
 
-	public GSReceiver(SinkTime sinkTime, String host, int port)
-			throws ExtensionException {
+	public GSReceiver(SinkTime sinkTime, String host, int port,
+			Set<String> attributeFilter) throws ExtensionException {
 		this.sinkTime = sinkTime;
+		this.attributeFilter = attributeFilter;
 		try {
 			nsReceiver = new NetStreamReceiver(host, port);
 		} catch (UnknownHostException e) {
@@ -79,7 +82,9 @@ public class GSReceiver extends SinkAdapter {
 	@Override
 	public void edgeAttributeAdded(String sourceId, long timeId, String edgeId,
 			String attribute, Object value) {
-		if (sinkTime.isNewEvent(sourceId, timeId)) {
+		if (sinkTime.isNewEvent(sourceId, timeId)
+				&& (attributeFilter == null || attributeFilter
+						.contains(attribute))) {
 			Attributes a = edgeAttributes.get(edgeId);
 			if (a == null) {
 				a = new Attributes();
@@ -98,7 +103,9 @@ public class GSReceiver extends SinkAdapter {
 	@Override
 	public void graphAttributeAdded(String sourceId, long timeId,
 			String attribute, Object value) {
-		if (sinkTime.isNewEvent(sourceId, timeId))
+		if (sinkTime.isNewEvent(sourceId, timeId)
+				&& (attributeFilter == null || attributeFilter
+						.contains(attribute)))
 			graphAttributes.add(attribute, value);
 	}
 
@@ -111,7 +118,9 @@ public class GSReceiver extends SinkAdapter {
 	@Override
 	public void nodeAttributeAdded(String sourceId, long timeId, String nodeId,
 			String attribute, Object value) {
-		if (sinkTime.isNewEvent(sourceId, timeId)) {
+		if (sinkTime.isNewEvent(sourceId, timeId)
+				&& (attributeFilter == null || attributeFilter
+						.contains(attribute))) {
 			Attributes a = nodeAttributes.get(nodeId);
 			if (a == null) {
 				a = new Attributes();

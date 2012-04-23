@@ -27,6 +27,7 @@ public class TestReceiver {
 		sender.stepBegins("foo", timeId++, 2);
 		
 		sender.edgeAttributeAdded("foo", timeId++, "0_1", "ea", array);
+		sender.close();
 	}
 
 }
