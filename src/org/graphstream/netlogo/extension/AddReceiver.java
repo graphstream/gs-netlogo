@@ -19,7 +19,8 @@ public class AddReceiver extends DefaultCommand {
 	@Override
 	public Syntax getSyntax() {
 		return Syntax.commandSyntax(new int[] { Syntax.TYPE_STRING,
-				Syntax.TYPE_STRING, Syntax.TYPE_NUMBER, Syntax.TYPE_STRING | Syntax.TYPE_REPEATABLE }, 3);
+				Syntax.TYPE_STRING, Syntax.TYPE_NUMBER,
+				Syntax.TYPE_STRING | Syntax.TYPE_REPEATABLE }, 3);
 	}
 
 	@Override

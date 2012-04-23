@@ -93,8 +93,8 @@ public class GSManager extends DefaultClassManager {
 		return receiver;
 	}
 
-	public static void addReceiver(String receiverId, String host, int port, Set<String> attributeFilter)
-			throws ExtensionException {
+	public static void addReceiver(String receiverId, String host, int port,
+			Set<String> attributeFilter) throws ExtensionException {
 		GSReceiver receiver = receivers.get(receiverId);
 		if (receiver != null)
 			throw new ExtensionException("Receiver \"" + receiverId

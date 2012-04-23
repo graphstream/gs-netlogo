@@ -1,10 +1,3 @@
-;; This example shows the use of graphstream extension.
-;; This is a modified model from the model library.
-;; The only modifications are the commands starting by 'gs:'
-
-;; Load the graphstream extension
-extensions [gs]
-
 turtles-own
 [
   ;; this is used to mark turtles we have already visited
@@ -23,17 +16,7 @@ globals
 ;;;;;;;;;;;;;;;;;;;;;;;;
 
 to setup
-  ;; When this procedure is called for the first time, it creates a sender 
-  ;; with id "my sender" connected to localhost on port 2012.
-  ;; Note that if there is no receiver on the other side, an error occurs.
-  ;; Consecutive calls do nothing, so it is safe to execute the setup procedure
-  ;; as many times as you want.
-  gs:add-sender "my sender" "localhost" 2012
-  ;; This command sends 'graph cleared' event.
-  ;; This will remove all nodes, edges and attributes
-  gs:clear "my sender"
-
-  ca  
+  ca
   set-default-shape turtles "circle"
   make-turtles
   ;; at this stage, all the components will be of size 1,
@@ -45,11 +28,7 @@ to setup
 end
 
 to make-turtles
-  crt num-nodes [
-    ;; When creating a turtle, ask it to register in the graph.
-    ;; This command sends 'add node' event
-    gs:add "my sender"
-  ]
+  crt num-nodes
   layout-circle turtles max-pxcor - 1
 end
 
@@ -141,12 +120,9 @@ to add-edge
     ;; and pick new turtles
     [ add-edge ]
     ;; else, go ahead and make it
-    [ create-link-with node2 [
-        ;; When creating a link, ask it to register in the graph
-        ;; This command sends 'add edge' event
-        gs:add "my sender"
-    ]]
+    [ create-link-with node2 ]
   ]
+
 end
 
 
@@ -709,7 +685,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 4.1.3
+NetLogo 4.1pre6
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
@@ -726,6 +702,4 @@ true
 Line -7500403 true 150 150 90 180
 Line -7500403 true 150 150 210 180
 
-@#$#@#$#@
-0
 @#$#@#$#@
