@@ -17,8 +17,8 @@ public class Step extends DefaultCommand {
 
 	@Override
 	public Syntax getSyntax() {
-		return Syntax.commandSyntax(new int[] { Syntax.TYPE_STRING,
-				Syntax.TYPE_NUMBER });
+		return Syntax.commandSyntax(new int[] { Syntax.StringType(),
+				Syntax.NumberType() });
 	}
 
 	@Override

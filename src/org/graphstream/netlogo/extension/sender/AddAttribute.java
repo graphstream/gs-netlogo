@@ -22,10 +22,10 @@ public class AddAttribute extends DefaultCommand {
 	@Override
 	public Syntax getSyntax() {
 		return Syntax.commandSyntax(new int[] {
-				Syntax.TYPE_STRING,
-				Syntax.TYPE_STRING,
-				Syntax.TYPE_NUMBER | Syntax.TYPE_BOOLEAN | Syntax.TYPE_STRING
-						| Syntax.TYPE_LIST });
+				Syntax.StringType(),
+				Syntax.StringType(),
+				Syntax.NumberType() | Syntax.BooleanType()
+						| Syntax.StringType() | Syntax.ListType() });
 	}
 
 	@Override

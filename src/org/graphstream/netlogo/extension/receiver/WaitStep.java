@@ -16,8 +16,8 @@ public class WaitStep extends DefaultReporter {
 
 	@Override
 	public Syntax getSyntax() {
-		return Syntax.reporterSyntax(new int[] { Syntax.TYPE_STRING },
-				Syntax.TYPE_NUMBER);
+		return Syntax.reporterSyntax(new int[] { Syntax.StringType() },
+				Syntax.NumberType());
 	}
 
 	@Override

@@ -20,7 +20,7 @@ public class Remove extends DefaultCommand {
 
 	@Override
 	public Syntax getSyntax() {
-		return Syntax.commandSyntax(new int[] { Syntax.TYPE_STRING });
+		return Syntax.commandSyntax(new int[] { Syntax.StringType() });
 	}
 
 	@Override

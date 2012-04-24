@@ -20,8 +20,9 @@ public class GetAttribute extends DefaultReporter {
 
 	@Override
 	public Syntax getSyntax() {
-		return Syntax.reporterSyntax(new int[] { Syntax.TYPE_STRING,
-				Syntax.TYPE_STRING }, Syntax.TYPE_LIST);
+		return Syntax.reporterSyntax(
+				new int[] { Syntax.StringType(), Syntax.StringType() },
+				Syntax.ListType());
 	}
 
 	@Override

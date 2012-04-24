@@ -24,7 +24,7 @@ end
 
 to setup
   setup-senders
-  ca
+  clear-all
   gs:clear "sender"
   set-default-shape turtles "circle"
   make-turtles
@@ -32,8 +32,7 @@ to setup
   ;; since there are no edges yet
   find-all-components
   color-giant-component
-  setup-plot
-  do-plotting
+  reset-ticks
 end
 
 to make-turtles
@@ -41,15 +40,6 @@ to make-turtles
     gs:add "sender"
   ]
   layout-circle turtles max-pxcor - 1
-end
-
-to setup-plot
-  ;; Draws the transition line.
-  set-current-plot-pen "transition"
-  plot-pen-up
-  plotxy 1 0
-  plot-pen-down
-  plotxy 1 1
 end
 
 ;;;;;;;;;;;;;;;;;;;;;;
@@ -67,9 +57,8 @@ to go
   find-all-components
   color-giant-component
   ask links [ set color [color] of end1 ]  ;; recolor all edges
-  tick
-  do-plotting
   layout
+  tick
 end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -136,16 +125,6 @@ to add-edge
   ]
 end
 
-
-to do-plotting ;; plotting procedure
-  set-current-plot-pen "size"
-  ;; We multiply by 2 because every edge should be counted twice while calculating,
-  ;; the average, since an edge connects two turtles.
-  ;; We divide by the node count to normalize the y axis to a 0 to 1 range.
-  plotxy (2 * count links / count turtles)
-         (giant-component-size / count turtles)
-end
-
 ;;;;;;;;;;;;;;
 ;;; Layout ;;;
 ;;;;;;;;;;;;;;
@@ -164,8 +143,8 @@ to do-layout
 end
 
 
-; Copyright 2005 Uri Wilensky. All rights reserved.
-; The full copyright notice is in the Information tab.
+; Copyright 2005 Uri Wilensky.
+; See Info tab for full copyright and license.
 @#$#@#$#@
 GRAPHICS-WINDOW
 393
@@ -192,6 +171,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
+30.0
 
 BUTTON
 67
@@ -208,6 +188,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 BUTTON
 109
@@ -224,6 +205,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SLIDER
 207
@@ -254,9 +236,10 @@ Fraction in giant component
 1.0
 true
 false
+"" ""
 PENS
-"size" 1.0 0 -2674135 true
-"transition" 1.0 0 -7500403 true
+"size" 1.0 0 -2674135 true "" ";; We multiply by 2 because every edge should be counted twice while calculating,\n;; the average, since an edge connects two turtles.\n;; We divide by the node count to normalize the y axis to a 0 to 1 range.\nplotxy (2 * count links / count turtles)\n       (giant-component-size / count turtles)"
+"transition" 1.0 0 -7500403 true "plot-pen-up\nplotxy 1 0\nplot-pen-down\nplotxy 1 1" ""
 
 MONITOR
 226
@@ -284,6 +267,7 @@ NIL
 NIL
 NIL
 NIL
+1
 
 SWITCH
 227
@@ -311,22 +295,21 @@ NIL
 NIL
 NIL
 NIL
+1
 
 @#$#@#$#@
-WHAT IS IT?
------------
+## WHAT IS IT?
+
 In a network, a "component" is a group of nodes that are all connected to each other, directly or indirectly.  So if a network has a "giant component", that means almost every node is reachable from almost every other.  This model shows how quickly a giant component arises if you grow a random network.
 
+## HOW IT WORKS
 
-HOW IT WORKS
-------------
 Initially we have nodes but no connections (edges) between them. At each step, we pick two nodes at random which were not directly connected before and add an edge between them.  All possible connections between them have exactly the same probability of occurring.
 
 As the model runs, small chain-like "components" are formed, where the members in each component are either directly or indirectly connected to each other.  If an edge is created between nodes from two different components, then those two components merge into one. The component with the most members at any given point in time is the "giant" component and it is colored red.  (If there is a tie for largest, we pick a random component to color.)
 
+## HOW TO USE IT
 
-HOW TO USE IT
--------------
 The NUM-NODES slider controls the size of the network.  Choose a size and press SETUP.
 
 Pressing the GO ONCE button adds one new edge to the network.  To repeatedly add edges, press GO.
@@ -337,51 +320,42 @@ The REDO LAYOUT button runs the layout-step procedure continuously to improve th
 
 A monitor shows the current size of the giant component, and the plot shows how the giant component's size changes over time.
 
+## THINGS TO NOTICE
 
-THINGS TO NOTICE
-----------------
 The y-axis of the plot shows the fraction of all nodes that are included in the giant component.  The x-axis shows the average number of connections per node. The vertical line on the plot shows where the average number of connections per node equals 1.  What happens to the rate of growth of the giant component at this point?
 
 The model demonstrates one of the early proofs of random graph theory by the mathematicians Paul Erdos and Alfred Renyi (1959).  They showed that the largest connected component of a network formed by randomly connecting two existing nodes per time step, rapidly grows after the average number of connections per node equals 1. In other words, the average number of connections has a "critical point" where the network undergoes a "phase transition" from a rather unconnected world of a bunch of small, fragmented components, to a world where most nodes belong to the same connected component.
 
+## THINGS TO TRY
 
-THINGS TO TRY
--------------
 Let the model run until the end.  Does the "giant component" live up to its name?
 
-Run the model again, this time slowly, a step at a time.  Watch how the components grow.  What is happening when the plot is steepest?
+Run the model again, this time slowly, a step at a time.  Watch how the components grow. What is happening when the plot is steepest?
 
 Run it with a small number of nodes (like 10) and watch the plot.  How does it differ from the plot you get when you run it with a large number of nodes (like 300)?  If you do multiple runs with the same number of nodes, how much does the shape of the plot vary from run to run?  You can turn off the LAYOUT? switch to get results faster.
 
+## EXTENDING THE MODEL
 
-EXTENDING THE MODEL
--------------------
 Right now the probability of any two nodes getting connected to each other is the same. Can you think of ways to make some nodes more attractive to connect to than others?  How would that impact the formation of the giant component?
 
+## NETWORK CONCEPTS
 
-NETWORK CONCEPTS
-----------------
 Identification of the connected components is done using a standard search algorithm called "depth first search."  "Depth first" means that the algorithm first goes deep into a branch of connections, tracing them out all the way to the end.  For a given node it explores its neighbor's neighbors (and then their neighbors, etc) before moving on to its own next neighbor.  The algorithm is recursive so eventually all reachable nodes from a particular starting node will be explored.  Since we need to find every reachable node, and since it doesn't matter what order we find them in, another algorithm such as "breadth first search" would have worked equally well.  We chose depth first search because it is the simplest to code.
 
 The position of the nodes is determined by the "spring" method, which is further described in the Preferential Attachment model.
 
+## NETLOGO FEATURES
 
-NETLOGO FEATURES
-----------------
-Both nodes and edges are turtles.  Edge turtles have the "line" shape.  The edge turtle's SIZE variable is used to make the edge be the right length.
+Nodes are turtle agents and edges are link agents. The `layout-spring` primitive places the nodes, as if the edges are springs and the nodes are repelling each other.
 
-Lists are used heavily in this model.  Each node maintains a list of its neighboring nodes.  Lists are also used in the procedure that identifies the components.
+## RELATED MODELS
 
-
-RELATED MODELS
---------------
 See other models in the Networks section of the Models Library, such as Preferential Attachment.
 
 See also Network Example, in the Code Examples section.
 
+## CREDITS AND REFERENCES
 
-CREDITS AND REFERENCES
-----------------------
 This model is adapted from:
 Duncan J. Watts. Six Degrees: The Science of a Connected Age (W.W. Norton & Company, New York, 2003), pages 43-47.
 
@@ -394,24 +368,21 @@ This paper has some additional analysis:
 S. Janson, D.E. Knuth, T. Luczak, and B. Pittel. The birth of the giant component. Random Structures & Algorithms 4, 3 (1993), pages 233-358.
 
 
-HOW TO CITE
------------
-If you mention this model in an academic publication, we ask that you include these citations for the model itself and for the NetLogo software:
-- Wilensky, U. (2005).  NetLogo Giant Component model.  http://ccl.northwestern.edu/netlogo/models/GiantComponent.  Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
-- Wilensky, U. (1999). NetLogo. http://ccl.northwestern.edu/netlogo/. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
+## HOW TO CITE
 
-In other publications, please use:
-- Copyright 2005 Uri Wilensky. All rights reserved. See http://ccl.northwestern.edu/netlogo/models/GiantComponent for terms of use.
+If you mention this model in a publication, we ask that you include these citations for the model itself and for the NetLogo software:  
+- Wilensky, U. (2005).  NetLogo Giant Component model.  http://ccl.northwestern.edu/netlogo/models/GiantComponent.  Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.  
+- Wilensky, U. (1999). NetLogo. http://ccl.northwestern.edu/netlogo/. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.  
 
+## COPYRIGHT AND LICENSE
 
-COPYRIGHT NOTICE
-----------------
-Copyright 2005 Uri Wilensky. All rights reserved.
+Copyright 2005 Uri Wilensky.
 
-Permission to use, modify or redistribute this model is hereby granted, provided that both of the following requirements are followed:
-a) this copyright notice is included.
-b) this model will not be redistributed for profit without permission from Uri Wilensky. Contact Uri Wilensky for appropriate licenses for redistribution for profit.
+![CC BY-NC-SA 3.0](http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png)
 
+This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License.  To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/ or send a letter to Creative Commons, 559 Nathan Abbott Way, Stanford, California 94305, USA.
+
+Commercial licenses are also available. To inquire about commercial licenses, please contact Uri Wilensky at uri@northwestern.edu.
 @#$#@#$#@
 default
 true
@@ -696,7 +667,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 4.1.3
+NetLogo 5.0.1
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

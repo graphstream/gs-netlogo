@@ -52,14 +52,14 @@ public class GSReceiver extends SinkAdapter {
 	public LogoList receiveNodeAttribute(long nodeId, String attribute) {
 		pipe.pump();
 		Attributes a = nodeAttributes.get(nodeId + "");
-		return a == null ? new LogoList() : a.get(attribute);
+		return a == null ? LogoList.Empty() : a.get(attribute);
 	}
 
 	public LogoList receiveEdgeAttribute(long fromId, long toId,
 			String attribute) {
 		pipe.pump();
 		Attributes a = edgeAttributes.get(fromId + "_" + toId);
-		return a == null ? new LogoList() : a.get(attribute);
+		return a == null ? LogoList.Empty() : a.get(attribute);
 	}
 
 	public Double waitStep() {

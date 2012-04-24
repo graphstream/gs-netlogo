@@ -21,8 +21,8 @@ public class RemoveAttribute extends DefaultCommand {
 
 	@Override
 	public Syntax getSyntax() {
-		return Syntax.commandSyntax(new int[] { Syntax.TYPE_STRING,
-				Syntax.TYPE_STRING });
+		return Syntax.commandSyntax(new int[] { Syntax.StringType(),
+				Syntax.StringType() });
 	}
 
 	@Override

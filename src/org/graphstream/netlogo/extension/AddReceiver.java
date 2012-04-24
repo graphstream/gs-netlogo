@@ -18,9 +18,10 @@ public class AddReceiver extends DefaultCommand {
 
 	@Override
 	public Syntax getSyntax() {
-		return Syntax.commandSyntax(new int[] { Syntax.TYPE_STRING,
-				Syntax.TYPE_STRING, Syntax.TYPE_NUMBER,
-				Syntax.TYPE_STRING | Syntax.TYPE_REPEATABLE }, 3);
+		return Syntax.commandSyntax(
+				new int[] { Syntax.StringType(), Syntax.StringType(),
+						Syntax.NumberType(),
+						Syntax.StringType() | Syntax.RepeatableType() }, 3);
 	}
 
 	@Override
@@ -41,5 +42,4 @@ public class AddReceiver extends DefaultCommand {
 			throw new ExtensionException(e.getMessage());
 		}
 	}
-
 }

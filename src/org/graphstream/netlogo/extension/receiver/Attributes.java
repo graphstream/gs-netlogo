@@ -4,31 +4,30 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.nlogo.api.LogoList;
+import org.nlogo.api.LogoListBuilder;
 
 public class Attributes {
-	Map<String, LogoList> map;
+	Map<String, LogoListBuilder> map;
 
 	public Attributes() {
-		map = new HashMap<String, LogoList>();
+		map = new HashMap<String, LogoListBuilder>();
 	}
 
 	public LogoList get(String attribute) {
-		LogoList list = map.remove(attribute);
-		if (list == null)
-			list = new LogoList();
-		return list;
+		LogoListBuilder builder = map.remove(attribute);
+		return builder == null ? LogoList.Empty() : builder.toLogoList();
 	}
 
 	public void add(String attribute, Object value) {
 		Object logoValue = netStreamToLogo(value);
 		if (logoValue == null)
 			return;
-		LogoList list = map.get(attribute);
-		if (list == null) {
-			list = new LogoList();
-			map.put(attribute, list);
+		LogoListBuilder builder = map.get(attribute);
+		if (builder == null) {
+			builder = new LogoListBuilder();
+			map.put(attribute, builder);
 		}
-		list.add(logoValue);
+		builder.add(logoValue);
 	}
 
 	public int size() {
@@ -41,16 +40,14 @@ public class Attributes {
 			return result;
 		if (!o.getClass().isArray())
 			return null;
-		LogoList list = new LogoList();
+		LogoListBuilder builder = new LogoListBuilder();
 		for (Object element : (Object[]) o) {
 			Object logoElement = simpleNetStreamToLogo(element);
-			if (logoElement == null) {
-				list.clear();
+			if (logoElement == null)
 				return null;
-			}
-			list.add(logoElement);
+			builder.add(logoElement);
 		}
-		return list;
+		return builder.toLogoList();
 	}
 
 	protected static Object simpleNetStreamToLogo(Object o) {
