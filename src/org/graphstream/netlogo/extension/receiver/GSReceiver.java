@@ -72,6 +72,14 @@ public class GSReceiver extends SinkAdapter {
 		}
 		return steps.remove();
 	}
+	
+	public void flush() {
+		pipe.pump();
+		graphAttributes = new Attributes();
+		nodeAttributes.clear();
+		edgeAttributes.clear();
+		steps.clear();
+	}
 
 	public void close() {
 		nsReceiver.quit();

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.graphstream.netlogo.extension.receiver.Flush;
 import org.graphstream.netlogo.extension.receiver.GSReceiver;
 import org.graphstream.netlogo.extension.receiver.GetAttribute;
 import org.graphstream.netlogo.extension.receiver.WaitStep;
@@ -57,6 +58,7 @@ public class GSManager extends DefaultClassManager {
 		manager.addPrimitive("clear-receivers", new ClearReceivers());
 
 		manager.addPrimitive("get-attribute", new GetAttribute());
+		manager.addPrimitive("flush", new Flush());
 		manager.addPrimitive("wait-step", new WaitStep());
 	}
 
