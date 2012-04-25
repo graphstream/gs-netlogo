@@ -1,3 +1,5 @@
+extensions [gs]
+
 globals [
   infection-chance  ;; The chance out of 100 that an infected person will pass on
                     ;;   infection during one week of couplehood.
@@ -7,6 +9,8 @@ globals [
   slider-check-2    ;;   are changed on the fly, the model will notice and
   slider-check-3    ;;   change people's tendencies appropriately.
   slider-check-4
+  
+  diameters
 ]
 
 turtles-own [
@@ -21,6 +25,8 @@ turtles-own [
   condom-use         ;; The percent chance a person uses protection.
   test-frequency     ;; Number of times a person will get tested per year.
   partner            ;; The person that is our current partner in a couple.
+  
+  degree
 ]
 
 ;;;
@@ -28,10 +34,28 @@ turtles-own [
 ;;;
 
 to setup
+  setup-senders
   clear-all
   setup-globals
   setup-people
+  gs:flush "cumulative"
   reset-ticks
+end
+
+to setup-senders
+  gs:clear-senders
+  (foreach (list "couple" "infection" "cumulative") (list 2001 2002 2003) [
+    gs:add-sender ?1 "localhost" ?2
+    gs:clear ?1
+    gs:add-attribute ?1 "ui.title" word ?1 " graph"
+    gs:add-attribute ?1 "ui.antialias" true
+    gs:add-attribute ?1 "ui.stylesheet" "node {size: 8px;} edge {fill-color: grey;}"
+  ])
+end
+
+to setup-receiver
+  gs:clear-receivers
+  gs:add-receiver "cumulative" "localhost" 3001
 end
 
 to setup-globals
@@ -42,29 +66,40 @@ to setup-globals
   set slider-check-2 average-coupling-tendency
   set slider-check-3 average-condom-use
   set slider-check-4 average-test-frequency
+  
+  set diameters []
 end
 
 ;; Create carrying-capacity number of people half are righty and half are lefty
 ;;   and some are sick.  Also assigns colors to people with the ASSIGN-COLORS routine.
 
 to setup-people
-  crt initial-people
-    [ setxy random-xcor random-ycor
-      set known? false
-      set coupled? false
-      set partner nobody
-      ifelse random 2 = 0
-        [ set shape "person righty" ]
-        [ set shape "person lefty" ]
-      ;; 2.5% of the people start out infected, but they don't know it
-      set infected? (who < initial-people * 0.025)
-      if infected?
-        [ set infection-length random-float symptoms-show ]
-      assign-commitment
-      assign-coupling-tendency
-      assign-condom-use
-      assign-test-frequency
-      assign-color ]
+  crt initial-people [
+    gs:add "couple"
+    gs:add "cumulative"
+    setxy random-xcor random-ycor
+    gs:add-attribute "couple" "xy" list xcor ycor
+    set known? false
+    set coupled? false
+    set partner nobody
+    ifelse random 2 = 0 [
+      set shape "person righty" 
+    ][
+      set shape "person lefty"
+    ]
+    ;; 2.5% of the people start out infected, but they don't know it
+    set infected? (who < initial-people * 0.025)
+    if infected? [
+      gs:add "infection"
+      gs:add-attribute "infection" "ui.style" "fill-color: red;"
+      set infection-length random-float symptoms-show
+    ]
+    assign-commitment
+    assign-coupling-tendency
+    assign-condom-use
+    assign-test-frequency
+    assign-color
+  ]
 end
 
 ;; Different people are displayed in 3 different colors depending on health
@@ -73,11 +108,21 @@ end
 ;; red is infected and knows it
 
 to assign-color  ;; turtle procedure
-  ifelse not infected?
-    [ set color green ]
-    [ ifelse known?
-      [ set color red ]
-      [ set color blue ] ]
+  ifelse not infected? [
+    set color green
+    gs:add-attribute "couple" "ui.style" "fill-color: green;"
+    gs:add-attribute "cumulative" "ui.style" "fill-color: green;"
+  ][
+    ifelse known? [
+      set color red
+      gs:add-attribute "couple" "ui.style" "fill-color: red;"
+      gs:add-attribute "cumulative" "ui.style" "fill-color: red;"
+    ][
+      set color blue
+      gs:add-attribute "couple" "ui.style" "fill-color: blue;"
+      gs:add-attribute "cumulative" "ui.style" "fill-color: blue;"
+    ]
+  ]
 end
 
 ;; The following four procedures assign core turtle variables.  They use
@@ -133,7 +178,22 @@ to go
   ask turtles [ infect ]
   ask turtles [ test ]
   ask turtles [ assign-color ]
+  
+  gs:step "cumulative" ticks
+  ;; sync
+  while [gs:wait-step "cumulative" != ticks][]
+  get-attributes
   tick
+end
+
+to get-attributes
+  set diameters gs:get-attribute "cumulative" "diameter"
+  ask turtles [
+    let tmp gs:get-attribute "cumulative" "degree"
+    if not empty? tmp [
+      set degree last tmp
+    ]
+  ]
 end
 
 ;; Each tick a check is made to see if sliders have been changed.
@@ -159,6 +219,7 @@ end
 to move  ;; turtle procedure
   rt random-float 360
   fd 1
+  gs:add-attribute "couple" "xy" list xcor ycor
 end
 
 ;; People have a chance to couple depending on their tendency to have sex and
@@ -168,33 +229,47 @@ end
 to couple  ;; turtle procedure -- righties only!
   let potential-partner one-of (turtles-at -1 0)
                           with [not coupled? and shape = "person lefty"]
-  if potential-partner != nobody
-    [ if random-float 10.0 < [coupling-tendency] of potential-partner
-      [ set partner potential-partner
+  if potential-partner != nobody [
+    if random-float 10.0 < [coupling-tendency] of potential-partner [
+      set partner potential-partner
+      create-link-with partner [
+        gs:add "couple"
+        gs:add "cumulative"
+        die
+      ]
+      move-to patch-here ;; move to center of patch
+      set coupled? true
+      ask partner [
         set coupled? true
-        ask partner [ set coupled? true ]
-        ask partner [ set partner myself ]
-        move-to patch-here ;; move to center of patch
-        move-to patch-here ;; partner moves to center of patch
-        set pcolor gray - 3
-        ask (patch-at -1 0) [ set pcolor gray - 3 ] ] ]
+        set partner myself
+        move-to patch-here
+      ]
+      set pcolor gray - 3
+      ask (patch-at -1 0) [ set pcolor gray - 3 ]
+    ]
+  ]
 end
 
 ;; If two peoples are together for longer than either person's commitment variable
 ;; allows, the couple breaks up.
 
 to uncouple  ;; turtle procedure
-  if coupled? and (shape = "person righty")
-    [ if (couple-length > commitment) or
-         ([couple-length] of partner) > ([commitment] of partner)
-        [ set coupled? false
-          set couple-length 0
-          ask partner [ set couple-length 0 ]
-          set pcolor black
-          ask (patch-at -1 0) [ set pcolor black ]
-          ask partner [ set partner nobody ]
-          ask partner [ set coupled? false ]
-          set partner nobody ] ]
+  if coupled? and (shape = "person righty") [
+    if (couple-length > commitment) or ([couple-length] of partner) > ([commitment] of partner) [
+      create-link-with partner [
+        gs:remove "couple"
+        die
+      ]
+      set coupled? false
+      set couple-length 0
+      ask partner [ set couple-length 0 ]
+      set pcolor black
+      ask (patch-at -1 0) [ set pcolor black ]
+      ask partner [ set partner nobody ]
+      ask partner [ set coupled? false ]
+      set partner nobody
+    ]
+  ]
 end
 
 ;; Infection can occur if either person is infected, but the infection is unknown.
@@ -206,11 +281,20 @@ end
 ;; wants to use a condom, infection will not occur.
 
 to infect  ;; turtle procedure
-  if coupled? and infected? and not known?
-    [ if random-float 11 > condom-use or
-         random-float 11 > ([condom-use] of partner)
-        [ if random-float 100 < infection-chance
-            [ ask partner [ set infected? true ] ] ] ]
+  if coupled? and infected? and not known? and [not infected?] of partner [
+    if random-float 11 > condom-use or random-float 11 > ([condom-use] of partner) [
+      if random-float 100 < infection-chance [
+        ask partner [
+          set infected? true
+          gs:add "infection"
+        ]
+        create-link-to partner [
+          gs:add "infection"
+          die
+        ]
+      ] 
+    ]
+  ]
 end
 
 ;; People have a tendency to check out their health status based on a slider value.
@@ -255,8 +339,8 @@ GRAPHICS-WINDOW
 1
 1
 0
-1
-1
+0
+0
 1
 -12
 12
@@ -266,12 +350,13 @@ GRAPHICS-WINDOW
 1
 1
 weeks
+30.0
 
 BUTTON
-12
-81
-95
-114
+146
+10
+275
+43
 setup
 setup
 NIL
@@ -285,10 +370,10 @@ NIL
 1
 
 BUTTON
-96
-81
-179
-114
+146
+49
+275
+82
 go
 go
 T
@@ -302,10 +387,10 @@ NIL
 1
 
 MONITOR
-184
-74
-267
-119
+12
+265
+139
+310
 % infected
 %infected
 2
@@ -314,9 +399,9 @@ MONITOR
 
 SLIDER
 7
-37
+88
 276
-70
+121
 initial-people
 initial-people
 50
@@ -329,9 +414,9 @@ HORIZONTAL
 
 SLIDER
 7
-162
+158
 276
-195
+191
 average-commitment
 average-commitment
 1
@@ -344,9 +429,9 @@ HORIZONTAL
 
 SLIDER
 7
-127
+123
 276
-160
+156
 average-coupling-tendency
 average-coupling-tendency
 0
@@ -359,9 +444,9 @@ HORIZONTAL
 
 SLIDER
 7
-197
+193
 276
-230
+226
 average-condom-use
 average-condom-use
 0
@@ -374,9 +459,9 @@ HORIZONTAL
 
 SLIDER
 7
-232
+228
 276
-265
+261
 average-test-frequency
 average-test-frequency
 0
@@ -388,10 +473,10 @@ times/year
 HORIZONTAL
 
 PLOT
-7
-268
-276
-467
+11
+314
+280
+466
 Populations
 weeks
 people
@@ -406,6 +491,87 @@ PENS
 "HIV-" 1.0 0 -10899396 true "" "plot count turtles with [not infected?]"
 "HIV+" 1.0 0 -2674135 true "" "plot count turtles with [known?]"
 "HIV?" 1.0 0 -13345367 true "" "plot count turtles with [infected?] - count turtles with [known?]"
+
+BUTTON
+8
+10
+138
+43
+setup receiver
+setup-receiver
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+9
+48
+137
+81
+go once
+go
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+PLOT
+7
+474
+229
+624
+Diameter
+weeks
+diameter
+0.0
+52.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "foreach diameters [plot ?]"
+
+MONITOR
+148
+265
+277
+310
+average degree
+mean [degree] of turtles
+4
+1
+11
+
+PLOT
+238
+475
+723
+625
+Degree distribution
+degree
+#nodes
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"default" 1.0 1 -16777216 true "" "set-plot-x-range 0 max [degree] of turtles + 1\nset-plot-y-range 0 1\nhistogram [degree] of turtles"
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -518,7 +684,6 @@ Commercial licenses are also available. To inquire about commercial licenses, pl
 This model was created as part of the project: CONNECTED MATHEMATICS: MAKING SENSE OF COMPLEX PHENOMENA THROUGH BUILDING OBJECT-BASED PARALLEL MODELS (OBPML).  The project gratefully acknowledges the support of the National Science Foundation (Applications of Advanced Technologies Program) -- grant numbers RED #9552950 and REC #9632612.
 
 This model was converted to NetLogo as part of the projects: PARTICIPATORY SIMULATIONS: NETWORK-BASED DESIGN FOR SYSTEMS LEARNING IN CLASSROOMS and/or INTEGRATED SIMULATION AND MODELING ENVIRONMENT. The project gratefully acknowledges the support of the National Science Foundation (REPP & ROLE programs) -- grant numbers REC #9814682 and REC-0126227. Converted from StarLogoT to NetLogo, 2001.
-
 @#$#@#$#@
 default
 true
@@ -821,7 +986,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.0beta1
+NetLogo 5.0.1
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
