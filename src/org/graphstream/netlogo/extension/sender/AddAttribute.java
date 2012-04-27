@@ -13,6 +13,15 @@ import org.nlogo.api.Observer;
 import org.nlogo.api.Syntax;
 import org.nlogo.api.Turtle;
 
+/**
+ * Implements the {@code add-attribute} command.
+ * 
+ * <pre>
+ * gs:add-attribute senderId attribute value
+ * 
+ * @author Stefan Balev
+ * 
+ */
 public class AddAttribute extends DefaultCommand {
 	@Override
 	public String getAgentClassString() {

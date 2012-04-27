@@ -15,6 +15,15 @@ import org.graphstream.stream.thread.ThreadProxyPipe;
 import org.nlogo.api.ExtensionException;
 import org.nlogo.api.LogoList;
 
+/**
+ * A receiver.
+ * 
+ * A NetStreamReceiver plus helper methods that do the real job for all the
+ * receiver primitives.
+ * 
+ * @author Stefan Balev
+ * 
+ */
 public class GSReceiver extends SinkAdapter {
 	protected SinkTime sinkTime;
 	protected NetStreamReceiver nsReceiver;
@@ -72,7 +81,7 @@ public class GSReceiver extends SinkAdapter {
 		}
 		return steps.remove();
 	}
-	
+
 	public void flush() {
 		pipe.pump();
 		graphAttributes = new Attributes();

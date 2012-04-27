@@ -11,6 +11,16 @@ import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.api.Turtle;
 
+/**
+ * Implements the {@code add} command.
+ * 
+ * <pre>
+ * gs:add senderId
+ * </per>
+ * 
+ * @author Stefan Balev
+ * 
+ */
 public class Add extends DefaultCommand {
 
 	@Override

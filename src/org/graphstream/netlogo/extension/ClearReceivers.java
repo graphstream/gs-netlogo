@@ -6,6 +6,16 @@ import org.nlogo.api.DefaultCommand;
 import org.nlogo.api.ExtensionException;
 import org.nlogo.api.LogoException;
 
+/**
+ * Implements the {@code clear-receivers} command
+ * 
+ * <pre>
+ * gs:clear-receivers
+ * </pre>
+ * 
+ * @author Stefan Balev
+ *
+ */
 public class ClearReceivers extends DefaultCommand {
 	@Override
 	public String getAgentClassString() {

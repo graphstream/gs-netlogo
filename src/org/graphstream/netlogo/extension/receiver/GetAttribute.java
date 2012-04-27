@@ -12,6 +12,16 @@ import org.nlogo.api.Observer;
 import org.nlogo.api.Syntax;
 import org.nlogo.api.Turtle;
 
+/**
+ * Implements the {@code add-attribute} reporter.
+ * 
+ * <pre>
+ * gs:get-attribute receiverId attribute
+ * </pre>
+ * 
+ * @author Stefan Balev
+ * 
+ */
 public class GetAttribute extends DefaultReporter {
 	@Override
 	public String getAgentClassString() {

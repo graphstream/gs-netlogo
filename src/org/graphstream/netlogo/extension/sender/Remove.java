@@ -11,6 +11,16 @@ import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 import org.nlogo.api.Turtle;
 
+/**
+ * Implements the {@code remove} command.
+ * 
+ * <pre>
+ * gs:remove senderId
+ * </pre>
+ * 
+ * @author Stefan
+ *
+ */
 public class Remove extends DefaultCommand {
 
 	@Override

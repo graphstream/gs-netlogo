@@ -8,6 +8,16 @@ import org.nlogo.api.ExtensionException;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 
+/**
+ * Implements the {@code flush} command.
+ * 
+ * <pre>
+ * gs:flush receiverId
+ * </pre>
+ * 
+ * @author Stefan Balev
+ * 
+ */
 public class Flush extends DefaultCommand {
 	@Override
 	public String getAgentClassString() {
@@ -16,7 +26,7 @@ public class Flush extends DefaultCommand {
 
 	@Override
 	public Syntax getSyntax() {
-		return Syntax.commandSyntax(new int[]{Syntax.StringType()});
+		return Syntax.commandSyntax(new int[] { Syntax.StringType() });
 	}
 
 	@Override

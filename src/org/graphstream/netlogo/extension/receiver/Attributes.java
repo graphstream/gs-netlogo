@@ -6,6 +6,16 @@ import java.util.Map;
 import org.nlogo.api.LogoList;
 import org.nlogo.api.LogoListBuilder;
 
+/**
+ * Helper class.
+ * 
+ * Stocks list of values for each attribute. Provides methods to add a value to
+ * a list and to retrieve a list from attribute name. Handles the conversion
+ * from NetStream types to NetLogo types.
+ * 
+ * @author Stefan Balev
+ * 
+ */
 public class Attributes {
 	Map<String, LogoListBuilder> map;
 
@@ -28,10 +38,6 @@ public class Attributes {
 			map.put(attribute, builder);
 		}
 		builder.add(logoValue);
-	}
-
-	public int size() {
-		return map.size();
 	}
 
 	protected static Object netStreamToLogo(Object o) {

@@ -8,6 +8,16 @@ import org.nlogo.api.ExtensionException;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 
+/**
+ * Implements the {@code wait-step} reporter.
+ * 
+ * <pre>
+ * gs:wait-step receiverId
+ * </pre>
+ * 
+ * @author Stefan Balev
+ * 
+ */
 public class WaitStep extends DefaultReporter {
 	@Override
 	public String getAgentClassString() {
@@ -31,5 +41,4 @@ public class WaitStep extends DefaultReporter {
 			throw new ExtensionException(e.getMessage());
 		}
 	}
-
 }

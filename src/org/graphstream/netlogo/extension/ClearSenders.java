@@ -6,6 +6,16 @@ import org.nlogo.api.DefaultCommand;
 import org.nlogo.api.ExtensionException;
 import org.nlogo.api.LogoException;
 
+/**
+ * Implements the {@code clear-senders} command
+ * 
+ * <pre>
+ * gs:clear-senders
+ * </pre>
+ * 
+ * @author Stefan Balev
+ *
+ */
 public class ClearSenders extends DefaultCommand {
 	@Override
 	public String getAgentClassString() {

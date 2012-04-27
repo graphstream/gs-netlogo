@@ -7,6 +7,15 @@ import org.graphstream.stream.netstream.NetStreamSender;
 import org.graphstream.stream.sync.SourceTime;
 import org.nlogo.api.ExtensionException;
 
+/**
+ * A sender.
+ * 
+ * A NetStreamSender plus helper methods that do the real job for all the sender
+ * primitives.
+ * 
+ * @author Stefan
+ * 
+ */
 public class GSSender {
 	protected String sourceId;
 	protected SourceTime sourceTime;

@@ -8,6 +8,16 @@ import org.nlogo.api.ExtensionException;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 
+/**
+ * Implements the {@code clear} command.
+ * 
+ * <pre>
+ * gs:clear
+ * </pre>
+ * 
+ * @author Stefan Balev
+ * 
+ */
 public class Clear extends DefaultCommand {
 
 	@Override

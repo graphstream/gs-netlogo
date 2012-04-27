@@ -10,6 +10,17 @@ import org.nlogo.api.ExtensionException;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.Syntax;
 
+/**
+ * Implements the {@code add-receiver} command.
+ * 
+ * <pre>
+ * gs:add-receiver receiverId host port
+ * (gs:add-receiver receiverId host port attribute ...)
+ * </pre>
+ * 
+ * @author Stefan Balev
+ *
+ */
 public class AddReceiver extends DefaultCommand {
 	@Override
 	public String getAgentClassString() {

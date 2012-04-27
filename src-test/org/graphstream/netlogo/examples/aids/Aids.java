@@ -9,7 +9,7 @@ import org.graphstream.stream.netstream.NetStreamSender;
 public class Aids {
 
 	public static void main(String[] args) throws UnknownHostException, IOException {
-		System.setProperty("gs.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
+//		System.setProperty("gs.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 
 		// couple graph viewer
 		new SimpleNetStreamViewer(new NetStreamReceiver(2001), false, 500, 500);

@@ -22,6 +22,16 @@ import org.nlogo.api.DefaultClassManager;
 import org.nlogo.api.ExtensionException;
 import org.nlogo.api.PrimitiveManager;
 
+/**
+ * This is the main extension class.
+ * 
+ * It maintains a common sync mechanism for all senders and receivers, as well
+ * as methods to access senders and receivers by their id, to add and to remove
+ * them.
+ * 
+ * @author Stefan Balev
+ * 
+ */
 public class GSManager extends DefaultClassManager {
 	private static String sourceId;
 	private static SourceTime sourceTime;

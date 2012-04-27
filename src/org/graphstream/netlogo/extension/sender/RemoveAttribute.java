@@ -12,6 +12,16 @@ import org.nlogo.api.Observer;
 import org.nlogo.api.Syntax;
 import org.nlogo.api.Turtle;
 
+/**
+ * Implements the {@code remove-attribute} command.
+ * 
+ * <pre>
+ * gs:remove-attribute senderId attribute
+ * </pre>
+ * 
+ * @author Stefan Balev
+ * 
+ */
 public class RemoveAttribute extends DefaultCommand {
 
 	@Override
