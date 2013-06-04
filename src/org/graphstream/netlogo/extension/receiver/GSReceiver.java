@@ -74,10 +74,9 @@ public class GSReceiver extends SinkAdapter {
 	public Double waitStep() {
 		while (steps.isEmpty()) {
 			try {
-				Thread.sleep(10);
+				pipe.blockingPump();
 			} catch (InterruptedException e) {
 			}
-			pipe.pump();
 		}
 		return steps.remove();
 	}
