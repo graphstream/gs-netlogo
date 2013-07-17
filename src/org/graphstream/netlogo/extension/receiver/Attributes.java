@@ -57,10 +57,11 @@ public class Attributes {
 	}
 
 	protected static Object simpleNetStreamToLogo(Object o) {
-		if (o instanceof Boolean || o instanceof String /*|| o instanceof Double*/)
+		if (o instanceof Boolean || o instanceof String || o instanceof Double)
 			return o;
-		if (o instanceof Number)
+		if (o instanceof Number) {
 			return new Double(((Number) o).doubleValue());
+		}
 		return null;
 	}
 }
