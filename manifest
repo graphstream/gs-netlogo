@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 Extension-Name: gs
-Class-Manager: org.graphstream.netlogo.extension.GSManager
+Class-Manager: org.graphstream.netlogo.extension.GSExtension
 NetLogo-Extension-API-Version: 5.0
